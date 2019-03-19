@@ -1,0 +1,10 @@
+{
+  "editor.tabSize": 2,
+  "editor.renderWhitespace": "boundary",
+  "editor.wordWrapColumn": 120,
+  "files.trimTrailingWhitespace": true,
+  "editor.formatOnSave": true,
+  "prettier.parser": "flow",
+  "prettier.singleQuote": true,
+  "prettier.semi": false
+}
