@@ -1,38 +1,159 @@
-import UnionFind from '../src/UnionFind'
+const UnionFind = require('../src/UnionFind')
 
-test('10 nodes', () => {
-  const uf = UnionFind(10)
-  uf.union(0, 5)
-  uf.union(5, 6)
-  uf.union(6, 1)
-  uf.union(1, 2)
-  uf.union(2, 7)
+const runTest = sites => {
+  const size = sites.length
+  const n = Math.sqrt(size)
 
-  uf.union(3, 8)
-  uf.union(3, 4)
-  uf.union(4, 9)
-  expect(uf.connected(0, 7)).toBe(true)
-  expect(uf.connected(1, 8)).toBe(false)
-  uf.union(7, 8)
-  expect(uf.connected(1, 8)).toBe(true)
-})
+  const noOfNodes = size + 2
+  const uf = UnionFind(noOfNodes)
 
-test('1m nodes', () => {
-  const uf = UnionFind(1000000)
-  uf.union(0, 5)
-  uf.union(5, 2000)
-  uf.union(2000, 9876)
-  uf.union(1, 9876)
-  uf.union(0, 987314)
-  uf.union(987314, 786111)
-  uf.union(987314, 111222)
-  uf.union(111222, 111333)
+  const firstNode = size
+  const lastNode = size + 1
 
-  uf.union(3, 8)
-  uf.union(3, 4)
-  uf.union(4, 9)
-  expect(uf.connected(111333, 9876)).toBe(true)
-  expect(uf.connected(2000, 8)).toBe(false)
-  uf.union(987314, 8)
-  expect(uf.connected(2000, 9)).toBe(true)
+  for (let i = 0; i < size; i++) {
+    if (!sites[i]) continue
+
+    if (sites[i + 1] && (i + 1) % n !== 0) {
+      uf.union(i, i + 1)
+    }
+
+    if (i + n < size && sites[i + n]) {
+      uf.union(i, i + n)
+    }
+
+    if (i < n) uf.union(firstNode, i)
+    else if (i >= size - n) uf.union(lastNode, i)
+  }
+
+  return uf.connected(firstNode, lastNode)
+}
+
+const test1 = [
+  true,
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  true,
+  true,
+  true,
+  false,
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  false,
+  true,
+  false
+]
+
+const test2 = [
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  true,
+  false,
+  true,
+  true,
+  false,
+  false,
+  true,
+  false,
+  true,
+  false
+] // true
+
+const test3 = [
+  false,
+  true,
+  true,
+  false,
+  true,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true,
+  true,
+  false,
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true,
+  false
+] // false
+
+const test4 = [
+  true,
+  true,
+  true,
+  true,
+  false,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  false,
+  false,
+  true,
+  false,
+  true,
+  true,
+  false,
+  true,
+  true
+] // true
+
+describe('Percolation threshold simulation', () => {
+  test(`test1 ${test1.map(i => (i ? 'o' : 'x')).join('')} to be false`, () => {
+    expect(runTest(test1)).toBe(false)
+  })
+
+  test(`test2 ${test1.map(i => (i ? 'o' : 'x')).join('')} to be true`, () => {
+    expect(runTest(test2)).toBe(true)
+  })
+
+  test(`test3 ${test1.map(i => (i ? 'o' : 'x')).join('')} to be false`, () => {
+    expect(runTest(test3)).toBe(false)
+  })
+
+  test(`test4 ${test1.map(i => (i ? 'o' : 'x')).join('')} to be true`, () => {
+    expect(runTest(test4)).toBe(true)
+  })
 })

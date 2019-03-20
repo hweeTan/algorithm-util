@@ -34,4 +34,4 @@ function UnionFind(n) {
   }
 }
 
-export default UnionFind
+module.exports = UnionFind
